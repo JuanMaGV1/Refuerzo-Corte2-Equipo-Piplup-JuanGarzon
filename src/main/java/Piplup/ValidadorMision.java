@@ -1,4 +1,4 @@
-package Piplup;
+package src.main.java.Piplup;
 
 public class ValidadorMision {
     public boolean isMisionValida(Mision mision){

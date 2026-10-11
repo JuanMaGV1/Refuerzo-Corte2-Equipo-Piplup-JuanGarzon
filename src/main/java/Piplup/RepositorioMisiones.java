@@ -1,4 +1,4 @@
-package Piplup;
+package src.main.java.Piplup;
 
 import java.util.List;
 import java.util.Optional;

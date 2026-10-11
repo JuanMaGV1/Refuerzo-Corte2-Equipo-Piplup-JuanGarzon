@@ -1,4 +1,4 @@
-package Piplup;
+package src.main.java.Piplup;
 
 public enum TipoCarga {
     MUESTRA_AGUA,

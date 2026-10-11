@@ -1,4 +1,4 @@
-package Piplup;
+package src.main.java.Piplup;
 
 public class NotificadorOperador {
     public void notificarExito(Mision mision, String operacion){System.out.println("La operación '" + operacion +"'" + "relacionada con la misión '" + mision.getId() + "' se ha realizado exitosamente.");}

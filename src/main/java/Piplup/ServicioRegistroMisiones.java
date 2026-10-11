@@ -1,17 +1,20 @@
-package Piplup;
+package src.main.java.Piplup;
 
 import java.util.Optional;
 
-public class RegistradorMisiones {
+public class ServicioRegistroMisiones {
+    private RegistradorMisiones registrador;
     private ValidadorMision validador;
     private NotificadorOperador notificador;
     private final RepositorioMisiones repo;
 
-    public RegistradorMisiones(ValidadorMision validador, NotificadorOperador notificador, RepositorioMisiones r){
+    public ServicioRegistroMisiones(RegistradorMisiones registrador, ValidadorMision validador, NotificadorOperador notificador, RepositorioMisiones r){
+        this.registrador = registrador;
         this.validador = validador;
         this.notificador = notificador;
         this.repo = r;
     }
+    
     public void registrarMision(Mision mision){
         if (validador.isMisionValida(mision)){
             repo.registrar(mision);
