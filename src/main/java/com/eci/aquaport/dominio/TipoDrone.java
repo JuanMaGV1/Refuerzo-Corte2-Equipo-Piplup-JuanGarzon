@@ -68,6 +68,16 @@ public enum TipoDrone {
         return zona != null && zonasCompatibles.contains(zona);
     }
 
+        /**
+     * Devuelve una copia inmutable de las zonas compatibles con este tipo.
+     *
+     * Útil para mostrar al operador en el panel: "¿dónde puede operar
+     * este drone?". La copia es inmutable para que no se pueda modificar
+     * el comportamiento del enum desde fuera.
+     */
+    public Set<String> zonasCompatibles() {
+        return Set.copyOf(zonasCompatibles);
+    }
     /**
      * Catálogo centralizado de zonas hídricas.
      *
