@@ -1,6 +1,7 @@
 package com.eci.aquaport.aplicacion;
 
 import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.DroneSuperficial;
 import com.eci.aquaport.dominio.EstadoDrone;
 import com.eci.aquaport.dominio.EstadoMision;
 import com.eci.aquaport.dominio.Mision;
@@ -28,9 +29,9 @@ class AnalizadorMisionesTest {
 
     private Mision mision(String id, String partida, String llegada,
                           Prioridad prioridad, EstadoMision estado) {
-        DroneAcuatico drone = new DroneAcuatico(
+        DroneAcuatico drone = new DroneSuperficial(
                 "AR-01", "Aqua-Ranger 100", 92,
-                EstadoDrone.DISPONIBLE, partida, TipoDrone.SUPERFICIAL);
+                EstadoDrone.DISPONIBLE, partida);
         return new Mision.Builder()
                 .id(id).drone(drone)
                 .puntoPartida(partida).puntoLlegada(llegada)

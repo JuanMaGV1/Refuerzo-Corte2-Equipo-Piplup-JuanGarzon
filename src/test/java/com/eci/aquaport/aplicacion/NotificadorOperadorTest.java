@@ -1,6 +1,7 @@
 package com.eci.aquaport.aplicacion;
 
 import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.DroneBuceador;
 import com.eci.aquaport.dominio.EstadoDrone;
 import com.eci.aquaport.dominio.EstadoMision;
 import com.eci.aquaport.dominio.Mision;
@@ -51,9 +52,9 @@ class NotificadorOperadorTest {
         logger.addHandler(handlerCapturador);
 
         // Misión reutilizable — ahora con .prioridad(...) obligatoria
-        DroneAcuatico drone = new DroneAcuatico(
+        DroneAcuatico drone = new DroneBuceador(
                 "AR-01", "Aqua-Ranger 100", 92,
-                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
+                EstadoDrone.DISPONIBLE, "Embalse Norte");
         mision = new Mision.Builder()
                 .id("M-001")
                 .drone(drone)

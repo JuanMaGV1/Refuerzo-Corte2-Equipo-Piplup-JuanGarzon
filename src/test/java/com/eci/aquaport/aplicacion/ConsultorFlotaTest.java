@@ -1,6 +1,9 @@
 package com.eci.aquaport.aplicacion;
 
 import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.DroneBuceador;
+import com.eci.aquaport.dominio.DroneSemisumergido;
+import com.eci.aquaport.dominio.DroneSuperficial;
 import com.eci.aquaport.dominio.EstadoDrone;
 import com.eci.aquaport.dominio.TipoDrone;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,14 +25,14 @@ class ConsultorFlotaTest {
     void setUp() {
         consultor = new ConsultorFlota();
         flota = List.of(
-            new DroneAcuatico("AR-01", "Aqua-Ranger 100", 92,
-                    EstadoDrone.DISPONIBLE,    "Embalse Norte",       TipoDrone.BUCEADOR),
-            new DroneAcuatico("AR-02", "Aqua-Ranger 100", 45,
-                    EstadoDrone.DISPONIBLE,    "Canal Central",       TipoDrone.SEMISUMERGIDO),
-            new DroneAcuatico("AR-03", "Aqua-Ranger 100", 18,
-                    EstadoDrone.MANTENIMIENTO, "Laguna Sur",          TipoDrone.BUCEADOR),
-            new DroneAcuatico("AR-04", "Aqua-Ranger 100", 73,
-                    EstadoDrone.DISPONIBLE,    "Punto Ribereño Este", TipoDrone.SUPERFICIAL)
+            new DroneBuceador("AR-01", "Aqua-Ranger 100", 92,
+                    EstadoDrone.DISPONIBLE,    "Embalse Norte"),
+            new DroneSemisumergido("AR-02", "Aqua-Ranger 100", 45,
+                    EstadoDrone.DISPONIBLE,    "Canal Central"),
+            new DroneBuceador("AR-03", "Aqua-Ranger 100", 18,
+                    EstadoDrone.MANTENIMIENTO, "Laguna Sur"),
+            new DroneSuperficial("AR-04", "Aqua-Ranger 100", 73,
+                    EstadoDrone.DISPONIBLE,    "Punto Ribereño Este")
         );
     }
 
@@ -58,9 +61,9 @@ class ConsultorFlotaTest {
         @Test
         @DisplayName("Caso edge: batería exactamente en 35% SÍ se incluye")
         void bateriaEnElUmbral() {
-            var enElUmbral = List.of(
-                new DroneAcuatico("AR-UMBRAL", "Aqua-Ranger 100", 35,
-                        EstadoDrone.DISPONIBLE, "Zona", TipoDrone.SUPERFICIAL));
+            List<DroneAcuatico> enElUmbral = List.of(
+                new DroneSuperficial("AR-UMBRAL", "Aqua-Ranger 100", 35,
+                        EstadoDrone.DISPONIBLE, "Zona"));
             var resultado = consultor.listaDronesDisponiblesOrdenados(enElUmbral);
             assertEquals(1, resultado.size());
         }
@@ -91,9 +94,9 @@ class ConsultorFlotaTest {
         @Test
         @DisplayName("Retorna false si todos están por debajo del umbral")
         void ningunoConBateria() {
-            var sinBateria = List.of(
-                new DroneAcuatico("AR-X", "Aqua-Ranger 100", 10,
-                        EstadoDrone.DISPONIBLE, "Zona", TipoDrone.SUPERFICIAL));
+            List<DroneAcuatico> sinBateria = List.of(
+                new DroneSuperficial("AR-X", "Aqua-Ranger 100", 10,
+                        EstadoDrone.DISPONIBLE, "Zona"));
             assertFalse(consultor.existeDronDisponibleConBateria(sinBateria));
         }
     }

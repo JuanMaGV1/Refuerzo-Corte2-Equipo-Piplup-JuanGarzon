@@ -4,6 +4,9 @@ import com.eci.aquaport.aplicacion.AnalizadorFlota;
 import com.eci.aquaport.aplicacion.AnalizadorMisiones;
 import com.eci.aquaport.aplicacion.ConsultorFlota;
 import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.DroneBuceador;
+import com.eci.aquaport.dominio.DroneSemisumergido;
+import com.eci.aquaport.dominio.DroneSuperficial;
 import com.eci.aquaport.dominio.EstadoDrone;
 import com.eci.aquaport.dominio.EstadoMision;
 import com.eci.aquaport.dominio.Mision;
@@ -34,25 +37,25 @@ public class DemoPiplupPrinplup {
         // ─────────────────────────────────────────────────────────────
         List<DroneAcuatico> flota = List.of(
                 // SUPERFICIALES (3 disponibles, 1 en misión, 1 en mantenimiento)
-                new DroneAcuatico("AR-01", "Aqua-Ranger 100", 92, EstadoDrone.DISPONIBLE,    "Canal Central",        TipoDrone.SUPERFICIAL),
-                new DroneAcuatico("AR-02", "Aqua-Ranger 100", 78, EstadoDrone.DISPONIBLE,    "Punto Ribereño Este",  TipoDrone.SUPERFICIAL),
-                new DroneAcuatico("AR-03", "Aqua-Ranger 100", 45, EstadoDrone.DISPONIBLE,    "Laboratorio Hídrico",  TipoDrone.SUPERFICIAL),
-                new DroneAcuatico("AR-04", "Aqua-Ranger 100", 60, EstadoDrone.EN_MISION,     "Canal Central",        TipoDrone.SUPERFICIAL),
-                new DroneAcuatico("AR-05", "Aqua-Ranger 100", 22, EstadoDrone.MANTENIMIENTO, "Punto Ribereño Este",  TipoDrone.SUPERFICIAL),
+                new DroneSuperficial("AR-01", "Aqua-Ranger 100", 92, EstadoDrone.DISPONIBLE,    "Canal Central"),
+                new DroneSuperficial("AR-02", "Aqua-Ranger 100", 78, EstadoDrone.DISPONIBLE,    "Punto Ribereño Este"),
+                new DroneSuperficial("AR-03", "Aqua-Ranger 100", 45, EstadoDrone.DISPONIBLE,    "Laboratorio Hídrico"),
+                new DroneSuperficial("AR-04", "Aqua-Ranger 100", 60, EstadoDrone.EN_MISION,     "Canal Central"),
+                new DroneSuperficial("AR-05", "Aqua-Ranger 100", 22, EstadoDrone.MANTENIMIENTO, "Punto Ribereño Este"),
 
                 // SEMISUMERGIDOS (4 disponibles, 1 en misión)
-                new DroneAcuatico("AR-06", "Aqua-Ranger 100", 88, EstadoDrone.DISPONIBLE,    "Laguna Sur",           TipoDrone.SEMISUMERGIDO),
-                new DroneAcuatico("AR-07", "Aqua-Ranger 100", 55, EstadoDrone.DISPONIBLE,    "Canal Central",        TipoDrone.SEMISUMERGIDO),
-                new DroneAcuatico("AR-08", "Aqua-Ranger 100", 41, EstadoDrone.DISPONIBLE,    "Punto Ribereño Este",  TipoDrone.SEMISUMERGIDO),
-                new DroneAcuatico("AR-09", "Aqua-Ranger 100", 70, EstadoDrone.DISPONIBLE,    "Laboratorio Hídrico",  TipoDrone.SEMISUMERGIDO),
-                new DroneAcuatico("AR-10", "Aqua-Ranger 100", 33, EstadoDrone.EN_MISION,     "Laguna Sur",           TipoDrone.SEMISUMERGIDO),
+                new DroneSemisumergido("AR-06", "Aqua-Ranger 100", 88, EstadoDrone.DISPONIBLE,    "Laguna Sur"),
+                new DroneSemisumergido("AR-07", "Aqua-Ranger 100", 55, EstadoDrone.DISPONIBLE,    "Canal Central"),
+                new DroneSemisumergido("AR-08", "Aqua-Ranger 100", 41, EstadoDrone.DISPONIBLE,    "Punto Ribereño Este"),
+                new DroneSemisumergido("AR-09", "Aqua-Ranger 100", 70, EstadoDrone.DISPONIBLE,    "Laboratorio Hídrico"),
+                new DroneSemisumergido("AR-10", "Aqua-Ranger 100", 33, EstadoDrone.EN_MISION,     "Laguna Sur"),
 
                 // BUCEADORES (3 disponibles, 1 en misión, 1 recargando)
-                new DroneAcuatico("AR-11", "Aqua-Ranger 100", 95, EstadoDrone.DISPONIBLE,    "Embalse Norte",        TipoDrone.BUCEADOR),
-                new DroneAcuatico("AR-12", "Aqua-Ranger 100", 82, EstadoDrone.DISPONIBLE,    "Laguna Sur",           TipoDrone.BUCEADOR),
-                new DroneAcuatico("AR-13", "Aqua-Ranger 100", 67, EstadoDrone.DISPONIBLE,    "Laboratorio Hídrico",  TipoDrone.BUCEADOR),
-                new DroneAcuatico("AR-14", "Aqua-Ranger 100", 90, EstadoDrone.EN_MISION,     "Embalse Norte",        TipoDrone.BUCEADOR),
-                new DroneAcuatico("AR-15", "Aqua-Ranger 100", 30, EstadoDrone.RECARGANDO,    "Embalse Norte",        TipoDrone.BUCEADOR)
+                new DroneBuceador("AR-11", "Aqua-Ranger 100", 95, EstadoDrone.DISPONIBLE,    "Embalse Norte"),
+                new DroneBuceador("AR-12", "Aqua-Ranger 100", 82, EstadoDrone.DISPONIBLE,    "Laguna Sur"),
+                new DroneBuceador("AR-13", "Aqua-Ranger 100", 67, EstadoDrone.DISPONIBLE,    "Laboratorio Hídrico"),
+                new DroneBuceador("AR-14", "Aqua-Ranger 100", 90, EstadoDrone.EN_MISION,     "Embalse Norte"),
+                new DroneBuceador("AR-15", "Aqua-Ranger 100", 30, EstadoDrone.RECARGANDO,    "Embalse Norte")
         );
 
         List<Mision> misiones = List.of(
@@ -139,9 +142,9 @@ public class DemoPiplupPrinplup {
 
     private static Mision mision(String id, String partida, String llegada,
                                   Prioridad prioridad, EstadoMision estado) {
-        DroneAcuatico dronePlaceholder = new DroneAcuatico(
+        DroneAcuatico dronePlaceholder = new DroneSuperficial(
                 "AR-01", "Aqua-Ranger 100", 92,
-                EstadoDrone.DISPONIBLE, partida, TipoDrone.SUPERFICIAL);
+                EstadoDrone.DISPONIBLE, partida);
         return new Mision.Builder()
                 .id(id)
                 .drone(dronePlaceholder)

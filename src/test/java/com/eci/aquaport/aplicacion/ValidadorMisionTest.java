@@ -1,12 +1,12 @@
 package com.eci.aquaport.aplicacion;
 
 import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.DroneBuceador;
 import com.eci.aquaport.dominio.EstadoDrone;
 import com.eci.aquaport.dominio.EstadoMision;
 import com.eci.aquaport.dominio.Mision;
 import com.eci.aquaport.dominio.Prioridad;
 import com.eci.aquaport.dominio.TipoCarga;
-import com.eci.aquaport.dominio.TipoDrone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,24 +30,24 @@ class ValidadorMisionTest {
     @Test
     @DisplayName("Drone con batería ≥ 35% puede ser asignado")
     void droneBateriaSuficiente_puedeAsignarse() {
-        DroneAcuatico d = new DroneAcuatico("AR-01", "Aqua-Ranger 100", 85,
-                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
+        DroneAcuatico d = new DroneBuceador("AR-01", "Aqua-Ranger 100", 85,
+                EstadoDrone.DISPONIBLE, "Embalse Norte");
         assertTrue(v.isBateriaSuficiente(d));
     }
 
     @Test
     @DisplayName("Drone con batería < 35% NO puede ser asignado (con drone disponible)")
     void droneBateriaCritica_noAsignable() {
-        DroneAcuatico d = new DroneAcuatico("AR-03", "Aqua-Ranger 100", 18,
-                EstadoDrone.DISPONIBLE, "Laguna Sur", TipoDrone.BUCEADOR);
+        DroneAcuatico d = new DroneBuceador("AR-03", "Aqua-Ranger 100", 18,
+                EstadoDrone.DISPONIBLE, "Laguna Sur");
         assertFalse(v.isBateriaSuficiente(d));
     }
 
     @Test
     @DisplayName("Batería exactamente en el umbral (35%) SÍ es suficiente")
     void droneBateriaEnElUmbral_esSuficiente() {
-        DroneAcuatico d = new DroneAcuatico("AR-05", "Aqua-Ranger 100", 35,
-                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
+        DroneAcuatico d = new DroneBuceador("AR-05", "Aqua-Ranger 100", 35,
+                EstadoDrone.DISPONIBLE, "Embalse Norte");
         assertTrue(v.isBateriaSuficiente(d));
     }
 
@@ -86,24 +86,24 @@ class ValidadorMisionTest {
     @Test
     @DisplayName("Drone con estado != DISPONIBLE no es asignable")
     void droneNoDisponible_noAsignable() {
-        DroneAcuatico d = new DroneAcuatico("AR-06", "Aqua-Ranger 100", 95,
-                EstadoDrone.MANTENIMIENTO, "Embalse Norte", TipoDrone.BUCEADOR);
+        DroneAcuatico d = new DroneBuceador("AR-06", "Aqua-Ranger 100", 95,
+                EstadoDrone.MANTENIMIENTO, "Embalse Norte");
         assertFalse(v.isDisponible(d));
     }
 
     @Test
     @DisplayName("Drone con estado DISPONIBLE SÍ pasa la verificación")
     void droneDisponible_esAsignable() {
-        DroneAcuatico d = new DroneAcuatico("AR-01", "Aqua-Ranger 100", 92,
-                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
+        DroneAcuatico d = new DroneBuceador("AR-01", "Aqua-Ranger 100", 92,
+                EstadoDrone.DISPONIBLE, "Embalse Norte");
         assertTrue(v.isDisponible(d));
     }
 
     @Test
     @DisplayName("Drone EN_MISION no es asignable")
     void droneEnMision_noAsignable() {
-        DroneAcuatico d = new DroneAcuatico("AR-07", "Aqua-Ranger 100", 90,
-                EstadoDrone.EN_MISION, "Embalse Norte", TipoDrone.BUCEADOR);
+        DroneAcuatico d = new DroneBuceador("AR-07", "Aqua-Ranger 100", 90,
+                EstadoDrone.EN_MISION, "Embalse Norte");
         assertFalse(v.isDisponible(d));
     }
 
@@ -142,8 +142,8 @@ class ValidadorMisionTest {
     class IsMisionValidaTest {
 
         private DroneAcuatico droneValido() {
-            return new DroneAcuatico("AR-01", "Aqua-Ranger 100", 92,
-                    EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
+            return new DroneBuceador("AR-01", "Aqua-Ranger 100", 92,
+                    EstadoDrone.DISPONIBLE, "Embalse Norte");
         }
 
         private Mision misionBase() {
@@ -207,9 +207,9 @@ class ValidadorMisionTest {
         @Test
         @DisplayName("Misión con drone no disponible retorna false")
         void misionConDroneNoDisponible_retornaFalse() {
-            DroneAcuatico droneNoDisponible = new DroneAcuatico(
+            DroneAcuatico droneNoDisponible = new DroneBuceador(
                     "AR-06", "Aqua-Ranger 100", 95,
-                    EstadoDrone.MANTENIMIENTO, "Embalse Norte", TipoDrone.BUCEADOR);
+                    EstadoDrone.MANTENIMIENTO, "Embalse Norte");
             Mision m = misionConDrone(droneNoDisponible);
             assertFalse(v.isMisionValida(m));
         }
@@ -217,9 +217,9 @@ class ValidadorMisionTest {
         @Test
         @DisplayName("Misión con drone de batería insuficiente retorna false")
         void misionConDroneBateriaInsuficiente_retornaFalse() {
-            DroneAcuatico droneBateriaBaja = new DroneAcuatico(
+            DroneAcuatico droneBateriaBaja = new DroneBuceador(
                     "AR-03", "Aqua-Ranger 100", 18,
-                    EstadoDrone.DISPONIBLE, "Laguna Sur", TipoDrone.BUCEADOR);
+                    EstadoDrone.DISPONIBLE, "Laguna Sur");
             Mision m = misionConDrone(droneBateriaBaja);
             assertFalse(v.isMisionValida(m));
         }
