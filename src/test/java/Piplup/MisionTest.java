@@ -1,8 +1,13 @@
-package Piplup;
+package piplup;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import piplup.DroneAcuatico;
+import piplup.EstadoMision;
+import piplup.Mision;
+import piplup.TipoCarga;
 
 import static org.junit.jupiter.api.Assertions.*;
 

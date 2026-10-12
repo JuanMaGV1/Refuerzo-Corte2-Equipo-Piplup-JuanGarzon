@@ -1,16 +1,11 @@
-package Piplup;
+package piplup;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import piplup.DroneAcuatico;
-import piplup.EstadoMision;
-import piplup.Mision;
-import piplup.NotificadorOperador;
-import piplup.TipoCarga;
-
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Handler;
@@ -26,27 +21,29 @@ class NotificadorOperadorTest {
     private Logger logger;
     private List<LogRecord> registrosCapturados;
     private Handler handlerCapturador;
-
     private Mision mision;
 
     @BeforeEach
     void setUp() {
         notificador = new NotificadorOperador();
-        logger = Logger.getLogger(NotificadorOperador.class.getName());
-        logger.setUseParentHandlers(false);  // evita que los logs salgan a consola
 
+        // Mismo logger que usa NotificadorOperador
+        logger = Logger.getLogger(NotificadorOperador.class.getName());
+        logger.setUseParentHandlers(false);
+
+        // Handler en memoria que captura cada LogRecord
         registrosCapturados = new ArrayList<>();
         handlerCapturador = new Handler() {
             @Override
             public void publish(LogRecord record) {
                 registrosCapturados.add(record);
             }
-            @Override public void flush() {}
-            @Override public void close() {}
+            @Override public void flush() { }
+            @Override public void close() { }
         };
         logger.addHandler(handlerCapturador);
 
-        // Misión de prueba reutilizable
+        // Misión reutilizable
         DroneAcuatico drone = new DroneAcuatico(
                 "AR-01", "Aqua-Ranger 100", 92, true, "Embalse Norte");
         mision = new Mision.Builder()
@@ -64,8 +61,16 @@ class NotificadorOperadorTest {
         logger.removeHandler(handlerCapturador);
     }
 
+    private String formatear(LogRecord registro) {
+        return MessageFormat.format(registro.getMessage(), registro.getParameters());
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // notificarExito
+    // ═══════════════════════════════════════════════════════════════
+
     @Test
-    @DisplayName("notificarExito registra log INFO con id de misión y operación")
+    @DisplayName("notificarExito registra un log INFO con id de misión y operación")
     void notificarExito_imprime() {
         // ACT
         notificador.notificarExito(mision, "Registrar");
@@ -75,7 +80,7 @@ class NotificadorOperadorTest {
                 "Debe emitirse exactamente 1 registro de log");
 
         LogRecord registro = registrosCapturados.get(0);
-        String mensaje = registro.getMessage();
+        String mensaje = formatear(registro);
 
         assertAll(
                 () -> assertEquals(Level.INFO, registro.getLevel(),
@@ -85,12 +90,16 @@ class NotificadorOperadorTest {
                 () -> assertTrue(mensaje.contains("Registrar"),
                         "El mensaje debe incluir el nombre de la operación"),
                 () -> assertTrue(mensaje.contains("exitosamente"),
-                        "El mensaje debe indicar éxito")
+                        "El mensaje debe indicar que la operación fue exitosa")
         );
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // notificarError
+    // ═══════════════════════════════════════════════════════════════
+
     @Test
-    @DisplayName("notificarError registra log WARNING con id de misión y razón")
+    @DisplayName("notificarError registra un log WARNING con id, operación y razón")
     void notificarError_imprime() {
         // ACT
         notificador.notificarError(mision, "Registrar", "Batería insuficiente");
@@ -99,7 +108,7 @@ class NotificadorOperadorTest {
         assertEquals(1, registrosCapturados.size());
 
         LogRecord registro = registrosCapturados.get(0);
-        String mensaje = registro.getMessage();
+        String mensaje = formatear(registro);
 
         assertAll(
                 () -> assertEquals(Level.WARNING, registro.getLevel(),
