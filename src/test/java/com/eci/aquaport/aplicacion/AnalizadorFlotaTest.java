@@ -185,6 +185,12 @@ class AnalizadorFlotaTest {
         void zonaInexistente() {
             assertTrue(analizador.droneOptimoParaZona(flota, "Zona Fantasma").isEmpty());
         }
+
+        @Test
+        @DisplayName("Zona en blanco retorna empty (hotfix)")
+        void zonaEnBlanco() {
+            assertTrue(analizador.droneOptimoParaZona(flota, "   ").isEmpty());
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
