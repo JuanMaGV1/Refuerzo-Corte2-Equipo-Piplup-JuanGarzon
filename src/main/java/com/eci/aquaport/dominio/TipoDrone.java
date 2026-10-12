@@ -65,7 +65,7 @@ public enum TipoDrone {
      * @return true si el tipo es técnicamente compatible con la zona
      */
     public boolean esCompatibleCon(String zona) {
-        return zona != null && zonasCompatibles.contains(zona);
+        return zona != null && !zona.isBlank() && zonasCompatibles.contains(zona);
     }
 
         /**
