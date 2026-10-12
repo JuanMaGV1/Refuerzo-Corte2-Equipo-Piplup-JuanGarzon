@@ -1,4 +1,4 @@
-package src.main.java.Piplup;
+package Piplup;
 
 import java.util.ArrayList;
 import java.util.List;

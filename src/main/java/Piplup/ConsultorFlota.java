@@ -1,4 +1,4 @@
-package src.main.java.Piplup;
+package Piplup;
 
 import java.util.Comparator;
 import java.util.List;
