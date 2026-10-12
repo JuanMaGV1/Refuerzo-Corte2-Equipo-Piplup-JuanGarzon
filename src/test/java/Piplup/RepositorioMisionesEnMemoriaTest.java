@@ -57,8 +57,10 @@ class RepositorioMisionesEnMemoriaTest {
     void listaEsInmutable() {
         repo.registrar(mision("M-001"));
         var lista = repo.listarTodas();
+        Mision misionExtra = mision("M-002");
+
         assertThrows(UnsupportedOperationException.class,
-                () -> lista.add(mision("M-002")));
+                () -> lista.add(misionExtra));
     }
 
     @Test
