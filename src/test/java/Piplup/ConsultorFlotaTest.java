@@ -99,8 +99,10 @@ class ConsultorFlotaTest {
         @DisplayName("La lista retornada es inmutable")
         void listaRetornadaEsInmutable() {
             var resultado = consultor.listaDronesDisponiblesOrdenados(flota);
+            DroneAcuatico drone = flota.get(0);            
+
             assertThrows(UnsupportedOperationException.class,
-                    () -> resultado.add(flota.get(0)));
+                    () -> resultado.add(drone));
         }
     }
 
