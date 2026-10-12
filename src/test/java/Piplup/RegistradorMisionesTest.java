@@ -8,6 +8,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import piplup.DroneAcuatico;
+import piplup.EstadoMision;
+import piplup.Mision;
+import piplup.NotificadorOperador;
+import piplup.RegistradorMisiones;
+import piplup.RepositorioMisiones;
+import piplup.TipoCarga;
+import piplup.ValidadorMision;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;   // ← ESTE FALTABA

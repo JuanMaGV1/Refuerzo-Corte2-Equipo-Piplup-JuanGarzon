@@ -5,6 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import piplup.ConsultorFlota;
+import piplup.DroneAcuatico;
+
 import java.util.List;
 import java.util.Optional;
 

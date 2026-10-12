@@ -1,4 +1,4 @@
-package Piplup;
+package piplup;
 
 public enum EstadoMision {
     PENDIENTE,

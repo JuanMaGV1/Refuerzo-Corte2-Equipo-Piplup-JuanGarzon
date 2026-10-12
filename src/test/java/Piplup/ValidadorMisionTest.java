@@ -5,6 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import piplup.DroneAcuatico;
+import piplup.EstadoMision;
+import piplup.Mision;
+import piplup.TipoCarga;
+import piplup.ValidadorMision;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ValidadorMisionTest {

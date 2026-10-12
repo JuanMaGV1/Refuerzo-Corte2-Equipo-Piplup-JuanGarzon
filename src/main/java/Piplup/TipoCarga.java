@@ -1,4 +1,4 @@
-package Piplup;
+package piplup;
 
 public enum TipoCarga {
     MUESTRA_AGUA,

@@ -4,6 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import piplup.DroneAcuatico;
+import piplup.EstadoMision;
+import piplup.Mision;
+import piplup.RepositorioMisionesEnMemoria;
+import piplup.TipoCarga;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RepositorioMisionesEnMemoriaTest {

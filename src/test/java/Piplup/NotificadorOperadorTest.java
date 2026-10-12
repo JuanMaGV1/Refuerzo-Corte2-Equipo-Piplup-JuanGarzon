@@ -5,6 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import piplup.DroneAcuatico;
+import piplup.EstadoMision;
+import piplup.Mision;
+import piplup.NotificadorOperador;
+import piplup.TipoCarga;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Handler;

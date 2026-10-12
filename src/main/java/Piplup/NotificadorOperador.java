@@ -1,16 +1,21 @@
-package Piplup;
+package piplup;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NotificadorOperador {
-    
+
     private static final Logger LOGGER = Logger.getLogger(NotificadorOperador.class.getName());
-    
-    public void notificarExito(Mision mision, String operacion){
-        LOGGER.info("La operación '" + operacion +"'" + "relacionada con la misión '" + mision.getId() + "' se ha realizado exitosamente.");
+
+    public void notificarExito(Mision mision, String operacion) {
+        LOGGER.log(Level.INFO,
+                "La operación ''{0}'' relacionada con la misión ''{1}'' se ha realizado exitosamente.",
+                new Object[]{operacion, mision.getId()});
     }
 
-    public void notificarError(Mision mision,String operacion, String Razon){
-        LOGGER.warning("La operación '" + operacion +"'" + "relacionada con la misión '" + mision.getId() + "' ha tenido un error. Razon: " + Razon);
+    public void notificarError(Mision mision, String operacion, String razon) {
+        LOGGER.log(Level.WARNING,
+                "La operación ''{0}'' relacionada con la misión ''{1}'' ha tenido un error. Razón: {2}",
+                new Object[]{operacion, mision.getId(), razon});
     }
 }
