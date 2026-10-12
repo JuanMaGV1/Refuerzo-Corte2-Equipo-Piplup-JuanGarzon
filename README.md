@@ -103,9 +103,9 @@ open  target/site/jacoco/index.html       # Linux/macOS
 
 ![Reporte SonarQube](/docs/sonarqube/dashboard.png)
 
-**Entregables por reto**
+## Entregables por reto
 
-- Nivel Piplup (MVP)
+- **Nivel Piplup (MVP)**
 
 | #	| Reto	| Entregable	|Evidencia|
 |---|-------|---------------|---------|
@@ -125,7 +125,13 @@ open  target/site/jacoco/index.html       # Linux/macOS
 |14 | SonarQube              |	0 bugs, 0 vulnerabilidades, 0 smells	   | docs/sonarqube/
 
 
-**Nivel Prinplup (v2)**
+- **Nivel Prinplup (v2)**
+
+Ampliación del MVP con:
+- Modelo de dominio extendido: `EstadoDrone`, `TipoDrone`, `Prioridad`.
+- Compatibilidad tipo ↔ zona en `TipoDrone`.
+- Consultas agregadas: `AnalizadorFlota`, `AnalizadorMisiones`.
+- Demo ejecutable: `DemoPiplupPrinplup`.
 
 | #	| Reto	| Entregable	|Evidencia|
 |---|-------|---------------|---------|
