@@ -15,7 +15,7 @@
     <packaging>jar</packaging>
 
     <name>AquaPort MVP</name>
-    <description>Sistema de drones acuáticos de la ECI - Nivel Piplup</description>
+    <description>Sistema de drones acuáticos de la ECI</description>
 
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- Propiedades: versiones centralizadas                 -->
@@ -34,6 +34,16 @@
         <sonar.coverage.jacoco.xmlReportPaths>
             ${project.basedir}/target/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
+
+        <!-- ⚠️ Excluir clases de demo del análisis estático -->
+        <sonar.exclusions>
+            **/demo/**/*.java
+        </sonar.exclusions>
+
+        <!-- ⚠️ Excluirlas también del cálculo de cobertura en SonarQube -->
+        <sonar.coverage.exclusions>
+            **/demo/**/*.java
+        </sonar.coverage.exclusions>
     </properties>
 
     <!-- ═══════════════════════════════════════════════════ -->
@@ -77,50 +87,58 @@
 
         <!-- JaCoCo: cobertura de código -->
         <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>${jacoco.version}</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>prepare-agent</goal>
-                    </goals>
-                </execution>
-                <execution>
-                    <id>report</id>
-                    <phase>test</phase>
-                    <goals>
-                        <goal>report</goal>
-                    </goals>
-                    <configuration>
-                        <formats>
-                            <format>HTML</format>
-                            <format>XML</format>
-                        </formats>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>check</id>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                    <configuration>
-                        <rules>
-                            <rule>
-                                <element>BUNDLE</element>
-                                <limits>
-                                    <limit>
-                                        <counter>LINE</counter>
-                                        <value>COVEREDRATIO</value>
-                                        <minimum>0.80</minimum>
-                                    </limit>
-                                </limits>
-                            </rule>
-                        </rules>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>${jacoco.version}</version>
+    <configuration>
+        <!-- ⚠️ Excluye clases de demostración y código sin lógica de negocio -->
+        <excludes>
+            <exclude>com/eci/aquaport/demo/**</exclude>
+        </excludes>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>prepare-agent</goal>
+            </goals>
+        </execution>
+        <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+                <goal>report</goal>
+            </goals>
+            <configuration>
+                <excludes>
+                    <exclude>com/eci/aquaport/demo/**</exclude>
+                </excludes>
+            </configuration>
+        </execution>
+        <execution>
+            <id>check</id>
+            <goals>
+                <goal>check</goal>
+            </goals>
+            <configuration>
+                <excludes>
+                    <exclude>com/eci/aquaport/demo/**</exclude>
+                </excludes>
+                <rules>
+                    <rule>
+                        <element>BUNDLE</element>
+                        <limits>
+                            <limit>
+                                <counter>LINE</counter>
+                                <value>COVEREDRATIO</value>
+                                <minimum>0.80</minimum>
+                            </limit>
+                        </limits>
+                    </rule>
+                </rules>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
 
                 <!--SonarQube Scanner -->
                 <plugin>
