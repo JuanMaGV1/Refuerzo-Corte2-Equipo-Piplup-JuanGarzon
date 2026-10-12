@@ -42,4 +42,22 @@ public class AnalizadorMisiones {
                 .flatMap(m -> Stream.of(m.puntoPartida(), m.puntoLlegada()))
                 .collect(Collectors.toSet());
     }
+
+        /**
+     * Filtra misiones con estado PENDIENTE y la prioridad indicada.
+     *
+     * Responde a la pregunta del operador: "¿qué CRÍTICAS están esperando
+     * asignación de drone?".
+     *
+     * @param misiones  lista completa de misiones del sistema
+     * @param prioridad prioridad a filtrar (CRITICA, ALTA, NORMAL, BAJA)
+     * @return lista inmutable con las misiones que cumplen ambos criterios
+     */
+    public List<Mision> misionesPendientesConPrioridad(
+            List<Mision> misiones, Prioridad prioridad) {
+        return misiones.stream()
+                .filter(m -> m.estadoMision() == EstadoMision.PENDIENTE)
+                .filter(m -> m.prioridad() == prioridad)
+                .toList();
+    }
 }
