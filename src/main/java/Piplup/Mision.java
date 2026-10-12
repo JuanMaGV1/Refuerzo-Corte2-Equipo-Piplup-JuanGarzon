@@ -27,37 +27,6 @@ public class Mision {
     public TipoCarga getTipoCarga() { return tipoCarga; }
     public EstadoMision getEstadoMision() { return estadoMision; }
 
-    public static void main(String[] args) {
-        List<DroneAcuatico> flota = List.of(
-            new DroneAcuatico("AR-01", "Aqua-Ranger 100", 92, true,  "Embalse Norte"),
-            new DroneAcuatico("AR-02", "Aqua-Ranger 100", 45, true,  "Canal Central"),
-            new DroneAcuatico("AR-03", "Aqua-Ranger 100", 18, false, "Laguna Sur"),
-            new DroneAcuatico("AR-04", "Aqua-Ranger 100", 73, true,  "Punto Ribereño Este")
-        );
-
-        Mision misionCorrecta = new Mision.Builder()
-                .id("M-001")
-                .drone(flota.get(0))
-                .puntoPartida("Embalse Norte")
-                .puntoLlegada("Laboratorio Hídrico")
-                .tipoCarga(TipoCarga.MUESTRA_AGUA)
-                .estadoMision(EstadoMision.PENDIENTE)
-                .build();
-
-        System.out.println("Misión creada correctamente: " + misionCorrecta.getId());
-        Mision misionConDroneNoDisponible = new Mision.Builder()
-                .id("M-002")
-                .drone(flota.get(2))  // AR-03, disponible=false
-                .puntoPartida("Laboratorio Hídrico")
-                .puntoLlegada("Embalse Norte")
-                .tipoCarga(TipoCarga.PAQUETE_LIGERO)
-                .estadoMision(EstadoMision.PENDIENTE)
-                .build();
-
-        ValidadorMision validador = new ValidadorMision();
-        System.out.println("¿Es válida para operar? " +
-                validador.isMisionValida(misionConDroneNoDisponible));  // false
-    }
 
     public static class Builder {
         private String id;
