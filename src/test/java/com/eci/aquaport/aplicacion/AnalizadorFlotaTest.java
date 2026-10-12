@@ -317,4 +317,41 @@ class AnalizadorFlotaTest {
             assertEquals(0, analizador.bateriaTotalFlotaDisponible(noDisponibles));
         }
     }
+
+        // ═══════════════════════════════════════════════════════════════
+    // BONUS — dronesConBateriaCritica
+    // ═══════════════════════════════════════════════════════════════
+
+    @Nested
+    @DisplayName("Bonus — dronesConBateriaCritica")
+    class BateriaCritica {
+
+        @Test
+        @DisplayName("Retorna solo drones con batería < 35%")
+        void retornaCriticos() {
+            // En la flota del setUp: AR-03 tiene 18%
+            var criticos = analizador.dronesConBateriaCritica(flota);
+            assertAll(
+                () -> assertEquals(1, criticos.size()),
+                () -> assertEquals("AR-03", criticos.get(0).id()),
+                () -> assertTrue(criticos.get(0).bateria() < 35)
+            );
+        }
+
+        @Test
+        @DisplayName("Sin drones críticos retorna lista vacía")
+        void sinCriticos() {
+            var todosOk = List.of(
+                new DroneAcuatico("AR-01", "Aqua-Ranger 100", 90,
+                        EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR)
+            );
+            assertTrue(analizador.dronesConBateriaCritica(todosOk).isEmpty());
+        }
+
+        @Test
+        @DisplayName("Flota vacía retorna lista vacía")
+        void flotaVacia() {
+            assertTrue(analizador.dronesConBateriaCritica(List.of()).isEmpty());
+        }
+    }
 }

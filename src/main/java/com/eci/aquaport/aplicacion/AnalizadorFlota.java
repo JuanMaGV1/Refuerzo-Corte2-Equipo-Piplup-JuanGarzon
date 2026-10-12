@@ -89,4 +89,19 @@ public class AnalizadorFlota {
                 .map(DroneAcuatico::bateria)
                 .reduce(0, Integer::sum);
     }
+
+     /**
+     * Devuelve los drones cuya batería está por debajo del umbral operativo.
+     *
+     * Útil para planificar recargas antes de asignar misiones: el operador
+     * puede ver de un vistazo qué drones necesitan pasar por la estación
+     * de carga.
+     *
+     * @return lista inmutable con los drones con batería < 35%
+     */
+    public List<DroneAcuatico> dronesConBateriaCritica(List<DroneAcuatico> flota) {
+        return flota.stream()
+                .filter(d -> d.bateria() < BATERIA_MINIMA)
+                .toList();
+    }
 }
