@@ -1,5 +1,12 @@
-package piplup;
+package com.eci.aquaport.aplicacion;
 
+import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.EstadoDrone;
+import com.eci.aquaport.dominio.EstadoMision;
+import com.eci.aquaport.dominio.Mision;
+import com.eci.aquaport.dominio.Prioridad;
+import com.eci.aquaport.dominio.TipoCarga;
+import com.eci.aquaport.dominio.TipoDrone;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,9 +50,10 @@ class NotificadorOperadorTest {
         };
         logger.addHandler(handlerCapturador);
 
-        // Misión reutilizable
+        // Misión reutilizable — ahora con .prioridad(...) obligatoria
         DroneAcuatico drone = new DroneAcuatico(
-                "AR-01", "Aqua-Ranger 100", 92, true, "Embalse Norte");
+                "AR-01", "Aqua-Ranger 100", 92,
+                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
         mision = new Mision.Builder()
                 .id("M-001")
                 .drone(drone)
@@ -53,6 +61,7 @@ class NotificadorOperadorTest {
                 .puntoLlegada("Laboratorio Hídrico")
                 .tipoCarga(TipoCarga.MUESTRA_AGUA)
                 .estadoMision(EstadoMision.PENDIENTE)
+                .prioridad(Prioridad.NORMAL)
                 .build();
     }
 
@@ -61,6 +70,9 @@ class NotificadorOperadorTest {
         logger.removeHandler(handlerCapturador);
     }
 
+    /**
+     * Sustituye los placeholders {0}, {1} del LogRecord por sus argumentos.
+     */
     private String formatear(LogRecord registro) {
         return MessageFormat.format(registro.getMessage(), registro.getParameters());
     }

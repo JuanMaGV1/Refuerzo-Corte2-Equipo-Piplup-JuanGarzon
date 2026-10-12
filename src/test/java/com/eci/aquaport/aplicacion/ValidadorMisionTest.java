@@ -1,15 +1,16 @@
-package piplup;
+package com.eci.aquaport.aplicacion;
 
+import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.EstadoDrone;
+import com.eci.aquaport.dominio.EstadoMision;
+import com.eci.aquaport.dominio.Mision;
+import com.eci.aquaport.dominio.Prioridad;
+import com.eci.aquaport.dominio.TipoCarga;
+import com.eci.aquaport.dominio.TipoDrone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import piplup.DroneAcuatico;
-import piplup.EstadoMision;
-import piplup.Mision;
-import piplup.TipoCarga;
-import piplup.ValidadorMision;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,38 +24,35 @@ class ValidadorMisionTest {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // GRUPO 1: Batería del drone
+    // Batería del drone
     // ═══════════════════════════════════════════════════════════════
 
     @Test
     @DisplayName("Drone con batería ≥ 35% puede ser asignado")
     void droneBateriaSuficiente_puedeAsignarse() {
-        DroneAcuatico d = new DroneAcuatico(
-                "AR-01", "Aqua-Ranger 100", 85, true, "Embalse Norte");
-        assertTrue(v.tieneBateriaSuficiente(d));
+        DroneAcuatico d = new DroneAcuatico("AR-01", "Aqua-Ranger 100", 85,
+                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
+        assertTrue(v.isBateriaSuficiente(d));
     }
 
     @Test
     @DisplayName("Drone con batería < 35% NO puede ser asignado (con drone disponible)")
     void droneBateriaCritica_noAsignable() {
-        // disponible=true para aislar la variable batería
-        DroneAcuatico d = new DroneAcuatico(
-                "AR-03", "Aqua-Ranger 100", 18, true, "Laguna Sur");
-        assertFalse(v.tieneBateriaSuficiente(d),
-                "Un drone disponible con batería < 35% no debe pasar");
+        DroneAcuatico d = new DroneAcuatico("AR-03", "Aqua-Ranger 100", 18,
+                EstadoDrone.DISPONIBLE, "Laguna Sur", TipoDrone.BUCEADOR);
+        assertFalse(v.isBateriaSuficiente(d));
     }
 
     @Test
     @DisplayName("Batería exactamente en el umbral (35%) SÍ es suficiente")
     void droneBateriaEnElUmbral_esSuficiente() {
-        DroneAcuatico d = new DroneAcuatico(
-                "AR-05", "Aqua-Ranger 100", 35, true, "Embalse Norte");
-        assertTrue(v.tieneBateriaSuficiente(d),
-                "35% es el mínimo válido, no debe rechazarse");
+        DroneAcuatico d = new DroneAcuatico("AR-05", "Aqua-Ranger 100", 35,
+                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
+        assertTrue(v.isBateriaSuficiente(d));
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // GRUPO 2: Punto de llegada
+    // Punto de llegada
     // ═══════════════════════════════════════════════════════════════
 
     @Test
@@ -62,8 +60,7 @@ class ValidadorMisionTest {
     void puntoLlegadaNulo_lanzaExcepcion() {
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> v.validarPuntoLlegada(null)
-        );
+                () -> v.validarPuntoLlegada(null));
         assertEquals("El punto de llegada no puede ser nulo", ex.getMessage());
     }
 
@@ -72,8 +69,7 @@ class ValidadorMisionTest {
     void puntoLlegadaVacio_lanzaExcepcion() {
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> v.validarPuntoLlegada("   ")
-        );
+                () -> v.validarPuntoLlegada("   "));
         assertEquals("El punto de llegada no puede estar vacío", ex.getMessage());
     }
 
@@ -84,27 +80,35 @@ class ValidadorMisionTest {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // GRUPO 3: Disponibilidad del drone
+    // Disponibilidad del drone
     // ═══════════════════════════════════════════════════════════════
 
     @Test
-    @DisplayName("Drone con disponible=false NO puede asignarse, aunque tenga batería alta")
+    @DisplayName("Drone con estado != DISPONIBLE no es asignable")
     void droneNoDisponible_noAsignable() {
-        DroneAcuatico d = new DroneAcuatico(
-                "AR-06", "Aqua-Ranger 100", 95, false, "Embalse Norte");
-        assertFalse(v.estaDisponible(d));
+        DroneAcuatico d = new DroneAcuatico("AR-06", "Aqua-Ranger 100", 95,
+                EstadoDrone.MANTENIMIENTO, "Embalse Norte", TipoDrone.BUCEADOR);
+        assertFalse(v.isDisponible(d));
     }
 
     @Test
-    @DisplayName("Drone con disponible=true SÍ pasa la verificación")
+    @DisplayName("Drone con estado DISPONIBLE SÍ pasa la verificación")
     void droneDisponible_esAsignable() {
-        DroneAcuatico d = new DroneAcuatico(
-                "AR-01", "Aqua-Ranger 100", 92, true, "Embalse Norte");
-        assertTrue(v.estaDisponible(d));
+        DroneAcuatico d = new DroneAcuatico("AR-01", "Aqua-Ranger 100", 92,
+                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
+        assertTrue(v.isDisponible(d));
+    }
+
+    @Test
+    @DisplayName("Drone EN_MISION no es asignable")
+    void droneEnMision_noAsignable() {
+        DroneAcuatico d = new DroneAcuatico("AR-07", "Aqua-Ranger 100", 90,
+                EstadoDrone.EN_MISION, "Embalse Norte", TipoDrone.BUCEADOR);
+        assertFalse(v.isDisponible(d));
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // GRUPO 4: Zona válida
+    // Zona válida
     // ═══════════════════════════════════════════════════════════════
 
     @Test
@@ -130,29 +134,22 @@ class ValidadorMisionTest {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // GRUPO 5: isMisionValida en conjunto
+    // isMisionValida en conjunto
     // ═══════════════════════════════════════════════════════════════
 
     @Nested
-    @DisplayName("isMisionValida — validación completa de una Mision")
+    @DisplayName("isMisionValida — validación completa")
     class IsMisionValidaTest {
 
-        // ─────────────────────────────────────────────────────────
-        // Helpers de construcción
-        // ─────────────────────────────────────────────────────────
-
-        /** Drone por defecto: disponible y con batería suficiente. */
         private DroneAcuatico droneValido() {
-            return new DroneAcuatico(
-                    "AR-01", "Aqua-Ranger 100", 92, true, "Embalse Norte");
+            return new DroneAcuatico("AR-01", "Aqua-Ranger 100", 92,
+                    EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
         }
 
-        /** Misión base: PENDIENTE, drone válido, puntos válidos. */
         private Mision misionBase() {
             return misionConEstado(EstadoMision.PENDIENTE);
         }
 
-        /** Misión con el estado indicado, todo lo demás válido. */
         private Mision misionConEstado(EstadoMision estado) {
             return new Mision.Builder()
                     .id("M-001")
@@ -161,10 +158,10 @@ class ValidadorMisionTest {
                     .puntoLlegada("Laboratorio Hídrico")
                     .tipoCarga(TipoCarga.MUESTRA_AGUA)
                     .estadoMision(estado)
+                    .prioridad(Prioridad.NORMAL)
                     .build();
         }
 
-        /** Misión con el drone indicado, todo lo demás válido. */
         private Mision misionConDrone(DroneAcuatico drone) {
             return new Mision.Builder()
                     .id("M-002")
@@ -173,12 +170,9 @@ class ValidadorMisionTest {
                     .puntoLlegada("Laboratorio Hídrico")
                     .tipoCarga(TipoCarga.SENSOR)
                     .estadoMision(EstadoMision.PENDIENTE)
+                    .prioridad(Prioridad.NORMAL)
                     .build();
         }
-
-        // ─────────────────────────────────────────────────────────
-        // Tests
-        // ─────────────────────────────────────────────────────────
 
         @Test
         @DisplayName("Misión válida retorna true")
@@ -199,6 +193,12 @@ class ValidadorMisionTest {
         }
 
         @Test
+        @DisplayName("Misión con estado ABORTADA retorna false")
+        void misionConEstadoAbortada_retornaFalse() {
+            assertFalse(v.isMisionValida(misionConEstado(EstadoMision.ABORTADA)));
+        }
+
+        @Test
         @DisplayName("Misión nula retorna false")
         void misionNula_retornaFalse() {
             assertFalse(v.isMisionValida(null));
@@ -207,26 +207,21 @@ class ValidadorMisionTest {
         @Test
         @DisplayName("Misión con drone no disponible retorna false")
         void misionConDroneNoDisponible_retornaFalse() {
-            // ARRANGE — drone con batería alta pero NO disponible
             DroneAcuatico droneNoDisponible = new DroneAcuatico(
-                    "AR-06", "Aqua-Ranger 100", 95, false, "Embalse Norte");
+                    "AR-06", "Aqua-Ranger 100", 95,
+                    EstadoDrone.MANTENIMIENTO, "Embalse Norte", TipoDrone.BUCEADOR);
             Mision m = misionConDrone(droneNoDisponible);
-
-            // ACT + ASSERT
-            assertFalse(v.isMisionValida(m),
-                    "Una misión con drone no disponible no debe ser válida para operar");
+            assertFalse(v.isMisionValida(m));
         }
+
         @Test
         @DisplayName("Misión con drone de batería insuficiente retorna false")
         void misionConDroneBateriaInsuficiente_retornaFalse() {
-            // ARRANGE — drone disponible pero con batería crítica
             DroneAcuatico droneBateriaBaja = new DroneAcuatico(
-                    "AR-03", "Aqua-Ranger 100", 18, true, "Laguna Sur");
+                    "AR-03", "Aqua-Ranger 100", 18,
+                    EstadoDrone.DISPONIBLE, "Laguna Sur", TipoDrone.BUCEADOR);
             Mision m = misionConDrone(droneBateriaBaja);
-
-            // ACT + ASSERT
-            assertFalse(v.isMisionValida(m),
-                    "Una misión con drone de batería insuficiente no debe ser válida");
+            assertFalse(v.isMisionValida(m));
         }
     }
 }

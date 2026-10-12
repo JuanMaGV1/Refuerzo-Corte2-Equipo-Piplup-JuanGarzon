@@ -1,17 +1,23 @@
-package piplup;
+package com.eci.aquaport.aplicacion;
 
 import java.util.Set;
+
+import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.EstadoDrone;
+import com.eci.aquaport.dominio.EstadoMision;
+import com.eci.aquaport.dominio.Mision;
+import com.eci.aquaport.dominio.TipoDrone.Zonas;
 
 public class ValidadorMision {
 
     private static final Set<String> ZONAS_VALIDAS = Set.of(
-            "Embalse Norte",
-            "Canal Central",
-            "Laguna Sur",
-            "Punto Ribereño Este",
-            "Laboratorio Hídrico"
+            Zonas.EMBALSE_NORTE,
+            Zonas.CANAL_CENTRAL,
+            Zonas.LAGUNA_SUR,
+            Zonas.PUNTO_RIBERENO_ESTE,
+            Zonas.LABORATORIO_HIDRICO
     );
-
+    
     private static final int BATERIA_MINIMA = 35;
 
     public boolean isMisionValida(Mision mision) {
@@ -21,12 +27,12 @@ public class ValidadorMision {
                 && isEstadoMisionValido(mision);
     }
 
-    public boolean tieneBateriaSuficiente(DroneAcuatico drone) {
+    public boolean isBateriaSuficiente(DroneAcuatico drone) {
         return drone != null && drone.bateria() >= BATERIA_MINIMA;
     }
 
-    public boolean estaDisponible(DroneAcuatico drone) {
-        return drone != null && drone.disponible();
+    public boolean isDisponible(DroneAcuatico drone) {
+        return drone != null && drone.estado() == EstadoDrone.DISPONIBLE;
     }
 
     public void validarPuntoLlegada(String puntoLlegada) {
@@ -47,19 +53,19 @@ public class ValidadorMision {
     // ═══════════════════════════════════════════════════════
 
     private boolean isPuntosValidos(Mision mision) {
-        return mision.getPuntoLlegada() != null
-                && mision.getPuntoPartida() != null
-                && !mision.getPuntoLlegada().isBlank()
-                && !mision.getPuntoPartida().isBlank();
+        return mision.puntoLlegada() != null
+                && mision.puntoPartida() != null
+                && !mision.puntoLlegada().isBlank()
+                && !mision.puntoPartida().isBlank();
     }
 
     private boolean isDroneValido(Mision mision) {
-        return mision.getDrone() != null
-                && mision.getDrone().disponible()
-                && mision.getDrone().bateria() >= BATERIA_MINIMA;
+        return mision.drone() != null
+                && mision.drone().estado() == EstadoDrone.DISPONIBLE
+                && mision.drone().bateria() >= BATERIA_MINIMA;
     }
 
     private boolean isEstadoMisionValido(Mision mision) {
-        return mision.getEstadoMision() == EstadoMision.PENDIENTE;
+        return mision.estadoMision() == EstadoMision.PENDIENTE;
     }
 }

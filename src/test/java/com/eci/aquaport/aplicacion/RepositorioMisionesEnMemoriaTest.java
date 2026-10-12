@@ -1,14 +1,15 @@
-package piplup;
+package com.eci.aquaport.aplicacion;
 
+import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.EstadoDrone;
+import com.eci.aquaport.dominio.EstadoMision;
+import com.eci.aquaport.dominio.Mision;
+import com.eci.aquaport.dominio.Prioridad;
+import com.eci.aquaport.dominio.TipoCarga;
+import com.eci.aquaport.dominio.TipoDrone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import piplup.DroneAcuatico;
-import piplup.EstadoMision;
-import piplup.Mision;
-import piplup.RepositorioMisionesEnMemoria;
-import piplup.TipoCarga;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +24,8 @@ class RepositorioMisionesEnMemoriaTest {
 
     private Mision mision(String id) {
         DroneAcuatico drone = new DroneAcuatico(
-                "AR-01", "Aqua-Ranger 100", 92, true, "Embalse Norte");
+                "AR-01", "Aqua-Ranger 100", 92,
+                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
         return new Mision.Builder()
                 .id(id)
                 .drone(drone)
@@ -31,6 +33,7 @@ class RepositorioMisionesEnMemoriaTest {
                 .puntoLlegada("Laboratorio Hídrico")
                 .tipoCarga(TipoCarga.MUESTRA_AGUA)
                 .estadoMision(EstadoMision.PENDIENTE)
+                .prioridad(Prioridad.NORMAL)
                 .build();
     }
 
@@ -48,7 +51,7 @@ class RepositorioMisionesEnMemoriaTest {
         repo.registrar(mision("M-001"));
         var encontrada = repo.misionPorId("M-001");
         assertTrue(encontrada.isPresent());
-        assertEquals("M-001", encontrada.get().getId());
+        assertEquals("M-001", encontrada.get().id());
     }
 
     @Test

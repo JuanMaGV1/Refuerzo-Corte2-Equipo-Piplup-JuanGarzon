@@ -1,8 +1,10 @@
-package piplup;
+package com.eci.aquaport.aplicacion;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.eci.aquaport.dominio.Mision;
 
 public class RepositorioMisionesEnMemoria implements RepositorioMisiones{
     
@@ -20,6 +22,6 @@ public class RepositorioMisionesEnMemoria implements RepositorioMisiones{
     
     @Override 
     public Optional<Mision> misionPorId(String id){
-        return misiones.stream().filter(m->m.getId().equals(id)).findAny();
+        return misiones.stream().filter(m->m.id().equals(id)).findAny();
     }
 }

@@ -1,5 +1,12 @@
-package piplup;
+package com.eci.aquaport.aplicacion;
 
+import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.EstadoDrone;
+import com.eci.aquaport.dominio.EstadoMision;
+import com.eci.aquaport.dominio.Mision;
+import com.eci.aquaport.dominio.Prioridad;
+import com.eci.aquaport.dominio.TipoCarga;
+import com.eci.aquaport.dominio.TipoDrone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,18 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import piplup.DroneAcuatico;
-import piplup.EstadoMision;
-import piplup.Mision;
-import piplup.NotificadorOperador;
-import piplup.RegistradorMisiones;
-import piplup.RepositorioMisiones;
-import piplup.TipoCarga;
-import piplup.ValidadorMision;
-
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;   // ← ESTE FALTABA
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -38,7 +36,8 @@ class RegistradorMisionesTest {
     @BeforeEach
     void setUp() {
         DroneAcuatico drone = new DroneAcuatico(
-                "AR-01", "Aqua-Ranger 100", 92, true, "Embalse Norte");
+                "AR-01", "Aqua-Ranger 100", 92,
+                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
         mision = new Mision.Builder()
                 .id("M-001")
                 .drone(drone)
@@ -46,6 +45,7 @@ class RegistradorMisionesTest {
                 .puntoLlegada("Laboratorio Hídrico")
                 .tipoCarga(TipoCarga.MUESTRA_AGUA)
                 .estadoMision(EstadoMision.PENDIENTE)
+                .prioridad(Prioridad.NORMAL)
                 .build();
     }
 
