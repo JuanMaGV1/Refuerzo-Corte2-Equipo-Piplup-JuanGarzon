@@ -1,7 +1,5 @@
 package piplup;
 
-import java.util.List;
-
 public class Mision {
 
     private final String id;
