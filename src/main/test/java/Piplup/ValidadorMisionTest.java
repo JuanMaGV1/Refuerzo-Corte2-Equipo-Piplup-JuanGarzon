@@ -198,15 +198,6 @@ class ValidadorMisionTest {
             assertFalse(v.isMisionValida(null));
         }
 
-        /**
-         * ✅ CORRECCIÓN DEL BLOQUEANTE #1
-         *
-         * Ahora el Builder NO rechaza drones no disponibles (solo valida
-         * estructura). Esta prueba construye la misión con un drone en
-         * disponible=false y verifica que el ValidadorMision la rechaza.
-         *
-         * El @DisplayName y el cuerpo ahora son coherentes.
-         */
         @Test
         @DisplayName("Misión con drone no disponible retorna false")
         void misionConDroneNoDisponible_retornaFalse() {
