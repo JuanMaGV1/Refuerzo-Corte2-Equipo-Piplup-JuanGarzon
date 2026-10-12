@@ -36,8 +36,6 @@ public class Mision {
         private TipoCarga tipoCarga;
         private EstadoMision estadoMision;
 
-        public Builder() {}
-
         public Builder id(String id) { this.id = id; return this; }
         public Builder drone(DroneAcuatico drone) { this.drone = drone; return this; }
         public Builder puntoPartida(String puntoPartida) { this.puntoPartida = puntoPartida; return this; }
