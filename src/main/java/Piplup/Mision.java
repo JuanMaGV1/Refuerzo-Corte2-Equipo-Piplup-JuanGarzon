@@ -25,7 +25,7 @@ public class Mision {
     public String getPuntoPartida() { return puntoPartida; }
     public String getPuntoLlegada() { return puntoLlegada; }
     public TipoCarga getTipoCarga() { return tipoCarga; }
-    public EstadoMision getEstadoMision() { return estadoMision;}
+    public EstadoMision getEstadoMision() { return estadoMision; }
 
     public static void main(String[] args) {
         List<DroneAcuatico> flota = List.of(
@@ -34,35 +34,31 @@ public class Mision {
             new DroneAcuatico("AR-03", "Aqua-Ranger 100", 18, false, "Laguna Sur"),
             new DroneAcuatico("AR-04", "Aqua-Ranger 100", 73, true,  "Punto Ribereño Este")
         );
+
         Mision misionCorrecta = new Mision.Builder()
-        .id("M-001")
-        .drone(flota.get(0))
-        .puntoPartida("Embalse Norte")
-        .puntoLlegada("Laboratorio Hídrico")
-        .tipoCarga(TipoCarga.MUESTRA_AGUA)
-        .estadoMision(EstadoMision.PENDIENTE)
-        .build();
+                .id("M-001")
+                .drone(flota.get(0))
+                .puntoPartida("Embalse Norte")
+                .puntoLlegada("Laboratorio Hídrico")
+                .tipoCarga(TipoCarga.MUESTRA_AGUA)
+                .estadoMision(EstadoMision.PENDIENTE)
+                .build();
 
-        System.out.println("Mision creada correctamente");
+        System.out.println("Misión creada correctamente: " + misionCorrecta.getId());
+        Mision misionConDroneNoDisponible = new Mision.Builder()
+                .id("M-002")
+                .drone(flota.get(2))  // AR-03, disponible=false
+                .puntoPartida("Laboratorio Hídrico")
+                .puntoLlegada("Embalse Norte")
+                .tipoCarga(TipoCarga.PAQUETE_LIGERO)
+                .estadoMision(EstadoMision.PENDIENTE)
+                .build();
 
-        Mision misionErroneaNoDisponible = new Mision.Builder()
-                                         .id("M-002")
-                                         .drone(flota.get(2))  //Lanza excepcion por dron no disponible
-                                         .puntoPartida("Laboratorio Hidrico")
-                                         .puntoLlegada("Embalse Norte")
-                                         .tipoCarga(TipoCarga.PAQUETE_LIGERO)
-                                         .estadoMision(EstadoMision.PENDIENTE)
-                                         .build();
-
-        Mision misionErroneaNull = new Mision.Builder()
-                                             .drone(flota.get(0))
-                                             .puntoPartida("Embalse Norte")
-                                             .puntoLlegada("Laboratorio Hidrico")
-                                             .tipoCarga(TipoCarga.SENSOR)
-                                             .estadoMision(EstadoMision.ENTREGADA)
-                                             .build();
+        ValidadorMision validador = new ValidadorMision();
+        System.out.println("¿Es válida para operar? " +
+                validador.isMisionValida(misionConDroneNoDisponible));  // false
     }
-    
+
     public static class Builder {
         private String id;
         private DroneAcuatico drone;
@@ -73,41 +69,34 @@ public class Mision {
 
         public Builder() {}
 
-        public Builder id(String id) {
-            this.id = id;
-            return this;
-        }
+        public Builder id(String id) { this.id = id; return this; }
+        public Builder drone(DroneAcuatico drone) { this.drone = drone; return this; }
+        public Builder puntoPartida(String puntoPartida) { this.puntoPartida = puntoPartida; return this; }
+        public Builder puntoLlegada(String puntoLlegada) { this.puntoLlegada = puntoLlegada; return this; }
+        public Builder tipoCarga(TipoCarga tipoCarga) { this.tipoCarga = tipoCarga; return this; }
+        public Builder estadoMision(EstadoMision estadoMision) { this.estadoMision = estadoMision; return this; }
 
-        public Builder drone(DroneAcuatico drone) {
-            this.drone = drone;
-            return this;
-        }
-
-        public Builder puntoPartida(String puntoPartida) {
-            this.puntoPartida = puntoPartida;
-            return this;
-        }
-
-        public Builder puntoLlegada(String puntoLlegada) {
-            this.puntoLlegada = puntoLlegada;
-            return this;
-        }
-
-        public Builder tipoCarga(TipoCarga tipoCarga) {
-            this.tipoCarga = tipoCarga;
-            return this;
-        }
-
-        public Builder estadoMision(EstadoMision estadoMision){
-            this.estadoMision = estadoMision;
-            return this;
-        }
-
+        /**
+         * Construye una Mision sintácticamente válida.
+         *
+         * El Builder SOLO valida estructura: campos obligatorios presentes.
+         * Las reglas de negocio (disponibilidad, batería, estado) las valida
+         * ValidadorMision. Esto separa responsabilidades (SRP) y permite
+         * construir misiones "crudas" para probar el validador.
+         */
         public Mision build() {
-            if(id == null || id.isBlank()){throw new IllegalStateException("El id de la mision no puede ser nulo ni vacio");}
-            if (drone == null || !drone.disponible()){throw new IllegalStateException("El dron no puede ser nulo ni puede estar no disponible");}
-            if (puntoPartida == null || puntoPartida.isBlank()){throw new IllegalStateException("El punto de partida no puede ser nulo ni vacio");}
-            if (puntoLlegada == null || puntoLlegada.isBlank()){throw new IllegalStateException("El punto de llegada no puede ser nulo ni vacio");}
+            if (id == null || id.isBlank()) {
+                throw new IllegalStateException("El id de la misión no puede ser nulo ni vacío");
+            }
+            if (drone == null) {
+                throw new IllegalStateException("El drone no puede ser nulo");
+            }
+            if (puntoPartida == null || puntoPartida.isBlank()) {
+                throw new IllegalStateException("El punto de partida no puede ser nulo ni vacío");
+            }
+            if (puntoLlegada == null || puntoLlegada.isBlank()) {
+                throw new IllegalStateException("El punto de llegada no puede ser nulo ni vacío");
+            }
             return new Mision(this);
         }
     }
