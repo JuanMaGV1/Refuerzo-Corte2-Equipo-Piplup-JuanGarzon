@@ -173,8 +173,9 @@ class AsignadorAutomaticoTest {
         @Test
         @DisplayName("Estrategia nula lanza IllegalArgumentException")
         void estrategiaNula_lanza() {
-            assertThrows(IllegalArgumentException.class,
-                    () -> new AsignadorAutomatico(List.of(), null));
+        List<DroneAcuatico> flotaVacia = List.of();   // ← extraído fuera
+        assertThrows(IllegalArgumentException.class,
+                () -> new AsignadorAutomatico(flotaVacia, null));
         }
     }
 }
