@@ -14,6 +14,14 @@ public class AsignadorAutomatico {
 
     private static final int BATERIA_MINIMA = 35;
 
+    // Razones de fallo como constantes (refactor)
+    private static final String RAZON_FALLO_EN_ZONA =
+            "Drone(s) en FALLO en la zona destino";
+    private static final String RAZON_SIN_CANDIDATOS =
+            "Sin drones candidatos para la misión";
+    private static final String RAZON_ESTRATEGIA_SIN_MATCH =
+            "La estrategia no encontró drone adecuado";
+
     private final List<DroneAcuatico> flota;
     private final EstrategiaSeleccion estrategia;
     private final List<ObservadorMision> observadores = new ArrayList<>();
