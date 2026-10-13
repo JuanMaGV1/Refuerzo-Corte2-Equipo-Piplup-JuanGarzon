@@ -19,11 +19,11 @@ import java.util.stream.Collector;
  * de recorrerlos 3 veces para calcular cantidad, suma de baterías y
  * cantidad de disponibles por separado.
  *
- * Uso:
- * <pre>
- *   Map&lt;String, ResumenZona&gt; resumen = flota.stream()
- *       .collect(groupingBy(DroneAcuatico::zona, CollectorResumenZona.INSTANCE));
- * </pre>
+ * El {@code combiner} está implementado para dar soporte a streams
+ * paralelos futuros (por ejemplo, análisis batch nocturno sobre
+ * millones de eventos). En el uso actual, todas las consultas son
+ * secuenciales porque la flota es de 60 drones y el overhead del
+ * paralelismo supera la ganancia. Ver docs/streams-paralelo-empoleon.md.
  */
 public class CollectorResumenZona implements Collector<
         DroneAcuatico,
@@ -60,6 +60,8 @@ public class CollectorResumenZona implements Collector<
     public Set<Characteristics> characteristics() {
         // No declaramos IDENTITY_FINISH porque el finisher transforma
         // el Acumulador en un ResumenZona (tipos distintos).
+        // No declaramos CONCURRENT porque el Acumulador no es thread-safe
+        // y el combiner es necesario para paralelismo.
         return Collections.unmodifiableSet(EnumSet.noneOf(Characteristics.class));
     }
 

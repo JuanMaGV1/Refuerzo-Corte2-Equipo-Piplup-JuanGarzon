@@ -1,7 +1,7 @@
 package com.eci.aquaport.aplicacion;
 
+import com.eci.aquaport.TestFixtures;
 import com.eci.aquaport.dominio.DroneAcuatico;
-import com.eci.aquaport.dominio.DroneBuceador;
 import com.eci.aquaport.dominio.EstadoDrone;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,9 +17,9 @@ class CollectorResumenZonaTest {
     @DisplayName("Calcula cantidad, promedio y disponibles en una sola pasada")
     void calculaResumen() {
         List<DroneAcuatico> drones = List.of(
-                new DroneBuceador("AR-01", "M", 80, EstadoDrone.DISPONIBLE, "ZonaX"),
-                new DroneBuceador("AR-02", "M", 60, EstadoDrone.EN_MISION,  "ZonaX"),
-                new DroneBuceador("AR-03", "M", 100, EstadoDrone.DISPONIBLE, "ZonaX")
+                TestFixtures.buceador("AR-01", 80, EstadoDrone.DISPONIBLE, "ZonaX"),
+                TestFixtures.buceador("AR-02", 60, EstadoDrone.EN_MISION,  "ZonaX"),
+                TestFixtures.buceador("AR-03", 100, EstadoDrone.DISPONIBLE, "ZonaX")
         );
 
         AnalizadorFlotaEmpoleon.ResumenZona resumen = drones.stream()
@@ -36,9 +36,9 @@ class CollectorResumenZonaTest {
     @DisplayName("Funciona con groupingBy")
     void funcionaConGroupingBy() {
         List<DroneAcuatico> drones = List.of(
-                new DroneBuceador("AR-01", "M", 80, EstadoDrone.DISPONIBLE, "ZonaX"),
-                new DroneBuceador("AR-02", "M", 60, EstadoDrone.DISPONIBLE, "ZonaY"),
-                new DroneBuceador("AR-03", "M", 100, EstadoDrone.DISPONIBLE, "ZonaX")
+                TestFixtures.buceador("AR-01", 80, EstadoDrone.DISPONIBLE, "ZonaX"),
+                TestFixtures.buceador("AR-02", 60, EstadoDrone.DISPONIBLE, "ZonaY"),
+                TestFixtures.buceador("AR-03", 100, EstadoDrone.DISPONIBLE, "ZonaX")
         );
 
         var resultado = drones.stream()
@@ -56,9 +56,32 @@ class CollectorResumenZonaTest {
     }
 
     @Test
+    @DisplayName("El combiner acumula dos acumuladores correctamente")
+    void combinaAcumuladoresCorrectamente() {
+        // Test directo del combiner sin usar parallelStream
+        DroneAcuatico d1 = TestFixtures.buceador("AR-01", 80, EstadoDrone.DISPONIBLE, "ZonaX");
+        DroneAcuatico d2 = TestFixtures.buceador("AR-02", 60, EstadoDrone.EN_MISION, "ZonaX");
+
+        var acumulador1 = new CollectorResumenZona.Acumulador();
+        acumulador1.agregar(d1);
+
+        var acumulador2 = new CollectorResumenZona.Acumulador();
+        acumulador2.agregar(d2);
+
+        var combinado = acumulador1.combinar(acumulador2);
+        var resumen = combinado.toResumen();
+
+        assertAll(
+                () -> assertEquals(2, resumen.cantidadDrones()),
+                () -> assertEquals(70.0, resumen.promedioBateria(), 0.0001),
+                () -> assertEquals(1, resumen.cantidadDisponibles())
+        );
+    }
+
+    @Test
     @DisplayName("Lista vacía no se agrega en el map")
     void listaVacia() {
-        var resultado = List.<DroneAcuatico>of().stream()
+        var resultado = TestFixtures.flotaVacia().stream()
                 .collect(Collectors.groupingBy(
                         DroneAcuatico::zona,
                         CollectorResumenZona.INSTANCE));

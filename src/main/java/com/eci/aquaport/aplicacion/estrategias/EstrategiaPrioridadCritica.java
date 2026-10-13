@@ -15,10 +15,10 @@ import java.util.Optional;
  * NO se usa como criterio de selección ni como desempate, porque el
  * requisito AP-08 dice explícitamente "independientemente de la batería".
  *
- * Si dos drones tienen la misma capacidad, se desempata por ID del drone
- * en orden lexicográfico ascendente (AR-A antes que AR-B). Como usamos
- * max(), el desempate se invierte con Comparator.reverseOrder() para que
- * el ID "menor" sea el elegido.
+ * Si dos drones tienen la misma capacidad, se desempata por ID en
+ * orden lexicográfico ascendente (AR-01 gana a AR-99). Como usamos
+ * Stream.max(), el desempate se invierte con Comparator.reverseOrder()
+ * para que el ID "menor" sea el elegido.
  *
  * Si la misión NO es crítica, delega en el fallback (EstrategiaMayorBateria),
  * que implementa AP-07.
