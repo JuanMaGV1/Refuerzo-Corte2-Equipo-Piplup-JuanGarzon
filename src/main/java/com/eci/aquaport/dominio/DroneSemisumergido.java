@@ -9,6 +9,12 @@ public class DroneSemisumergido extends DroneAcuatico {
         super(id, modelo, bateria, estado, zona);
     }
 
+    public DroneSemisumergido(String id, String modelo, int bateria,
+                               EstadoDrone estado, String zona,
+                               int entregasExitosas, int entregasFallidas) {
+        super(id, modelo, bateria, estado, zona, entregasExitosas, entregasFallidas);
+    }
+
     @Override
     public TipoDrone tipo() {
         return TipoDrone.SEMISUMERGIDO;

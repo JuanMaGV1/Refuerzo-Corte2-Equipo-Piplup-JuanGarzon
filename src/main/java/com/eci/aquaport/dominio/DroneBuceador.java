@@ -9,6 +9,12 @@ public class DroneBuceador extends DroneAcuatico {
         super(id, modelo, bateria, estado, zona);
     }
 
+    public DroneBuceador(String id, String modelo, int bateria,
+                          EstadoDrone estado, String zona,
+                          int entregasExitosas, int entregasFallidas) {
+        super(id, modelo, bateria, estado, zona, entregasExitosas, entregasFallidas);
+    }
+
     @Override
     public TipoDrone tipo() {
         return TipoDrone.BUCEADOR;
