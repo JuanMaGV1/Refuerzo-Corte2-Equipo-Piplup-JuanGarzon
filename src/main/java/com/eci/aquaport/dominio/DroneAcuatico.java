@@ -11,7 +11,7 @@ package com.eci.aquaport.dominio;
  * En Empoleon se añaden contadores de entregas exitosas y fallidas
  * para permitir consultas de historial y ratio de éxito.
  */
-public abstract class DroneAcuatico {
+public abstract class DroneAcuatico implements DroneOperable {
 
     private final String id;
     private final String modelo;
