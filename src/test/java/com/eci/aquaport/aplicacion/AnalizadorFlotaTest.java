@@ -1,6 +1,9 @@
 package com.eci.aquaport.aplicacion;
 
 import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.DroneBuceador;
+import com.eci.aquaport.dominio.DroneSemisumergido;
+import com.eci.aquaport.dominio.DroneSuperficial;
 import com.eci.aquaport.dominio.EstadoDrone;
 import com.eci.aquaport.dominio.TipoDrone;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,18 +32,12 @@ class AnalizadorFlotaTest {
         // AR-01 es SUPERFICIAL en Embalse Norte (zona incompatible con su tipo)
         //  → sirve para probar que la consulta 2 filtra por TIPO, no por ubicación.
         flota = List.of(
-            new DroneAcuatico("AR-01", "Aqua-Ranger 100", 92,
-                    EstadoDrone.DISPONIBLE,    "Embalse Norte",       TipoDrone.SUPERFICIAL),
-            new DroneAcuatico("AR-02", "Aqua-Ranger 100", 45,
-                    EstadoDrone.DISPONIBLE,    "Canal Central",       TipoDrone.SEMISUMERGIDO),
-            new DroneAcuatico("AR-03", "Aqua-Ranger 100", 18,
-                    EstadoDrone.MANTENIMIENTO, "Laguna Sur",          TipoDrone.BUCEADOR),
-            new DroneAcuatico("AR-04", "Aqua-Ranger 100", 73,
-                    EstadoDrone.DISPONIBLE,    "Punto Ribereño Este", TipoDrone.SUPERFICIAL),
-            new DroneAcuatico("AR-05", "Aqua-Ranger 100", 88,
-                    EstadoDrone.EN_MISION,     "Embalse Norte",       TipoDrone.BUCEADOR),
-            new DroneAcuatico("AR-06", "Aqua-Ranger 100", 55,
-                    EstadoDrone.DISPONIBLE,    "Embalse Norte",       TipoDrone.BUCEADOR)
+            new DroneSuperficial("AR-01", "Aqua-Ranger 100", 92, EstadoDrone.DISPONIBLE, "Embalse Norte"),
+            new DroneSemisumergido("AR-02", "Aqua-Ranger 100", 45, EstadoDrone.DISPONIBLE,    "Canal Central"),
+            new DroneBuceador("AR-03", "Aqua-Ranger 100", 18, EstadoDrone.MANTENIMIENTO, "Laguna Sur"),
+            new DroneSuperficial("AR-04", "Aqua-Ranger 100", 73,EstadoDrone.DISPONIBLE,    "Punto Ribereño Este"),
+            new DroneBuceador("AR-05", "Aqua-Ranger 100", 88, EstadoDrone.EN_MISION,     "Embalse Norte"),
+            new DroneBuceador("AR-06", "Aqua-Ranger 100", 55, EstadoDrone.DISPONIBLE,    "Embalse Norte")
         );
     }
 
@@ -96,9 +93,9 @@ class AnalizadorFlotaTest {
         @Test
         @DisplayName("Sin drones disponibles retorna map vacío")
         void sinDisponibles() {
-            var sinDisponibles = List.of(
-                new DroneAcuatico("AR-X", "Aqua-Ranger 100", 90,
-                        EstadoDrone.MANTENIMIENTO, "Zona", TipoDrone.SUPERFICIAL)
+            List<DroneAcuatico> sinDisponibles = List.of(
+                new DroneSuperficial("AR-X", "Aqua-Ranger 100", 90,
+                        EstadoDrone.MANTENIMIENTO, "Zona")
             );
             assertTrue(analizador.agruparDisponiblesPorTipo(sinDisponibles).isEmpty());
         }
@@ -157,9 +154,9 @@ class AnalizadorFlotaTest {
         @DisplayName("Zona sin drones compatibles retorna Optional.empty")
         void zonaSinCompatible() {
             // Solo SUPERFICIALES disponibles; Laguna Sur no acepta SUPERFICIAL.
-            var soloSuperficiales = List.of(
-                new DroneAcuatico("AR-X1", "Aqua-Ranger 100", 90,
-                        EstadoDrone.DISPONIBLE, "Cualquier Zona", TipoDrone.SUPERFICIAL)
+            List<DroneAcuatico> soloSuperficiales = List.of(
+                new DroneSuperficial("AR-X1", "Aqua-Ranger 100", 90,
+                        EstadoDrone.DISPONIBLE, "Cualquier Zona")
             );
             assertTrue(analizador.droneOptimoParaZona(soloSuperficiales, "Laguna Sur").isEmpty());
         }
@@ -167,9 +164,9 @@ class AnalizadorFlotaTest {
         @Test
         @DisplayName("Candidato compatible con batería < 35% no es elegido")
         void candidatoSinBateria() {
-            var buceadorSinBateria = List.of(
-                new DroneAcuatico("AR-X", "Aqua-Ranger 100", 20,
-                        EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR)
+            List<DroneAcuatico> buceadorSinBateria = List.of(
+                new DroneBuceador("AR-X", "Aqua-Ranger 100", 20,
+                        EstadoDrone.DISPONIBLE, "Embalse Norte")
             );
             assertTrue(analizador.droneOptimoParaZona(buceadorSinBateria, "Embalse Norte").isEmpty());
         }
@@ -261,13 +258,13 @@ class AnalizadorFlotaTest {
         @Test
         @DisplayName("Deduplica zonas repetidas")
         void deduplica() {
-            var tresEnLaMismaZona = List.of(
-                new DroneAcuatico("AR-01", "Aqua-Ranger 100", 90,
-                        EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR),
-                new DroneAcuatico("AR-02", "Aqua-Ranger 100", 80,
-                        EstadoDrone.EN_MISION, "Embalse Norte", TipoDrone.BUCEADOR),
-                new DroneAcuatico("AR-03", "Aqua-Ranger 100", 70,
-                        EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR)
+            List<DroneAcuatico> tresEnLaMismaZona = List.of(
+                new DroneBuceador("AR-01", "Aqua-Ranger 100", 90,
+                        EstadoDrone.DISPONIBLE, "Embalse Norte"),
+                new DroneBuceador("AR-02", "Aqua-Ranger 100", 80,
+                        EstadoDrone.EN_MISION, "Embalse Norte"),
+                new DroneBuceador("AR-03", "Aqua-Ranger 100", 70,
+                        EstadoDrone.DISPONIBLE, "Embalse Norte")
             );
             assertEquals(1, analizador.zonasUnicasDeFlotaActiva(tresEnLaMismaZona).size());
         }
@@ -282,10 +279,10 @@ class AnalizadorFlotaTest {
         @DisplayName("Todos en MANTENIMIENTO retorna set vacío")
         void todosEnMantenimiento() {
             var todosEnMant = List.of(
-                new DroneAcuatico("AR-01", "Aqua-Ranger 100", 90,
-                        EstadoDrone.MANTENIMIENTO, "Embalse Norte", TipoDrone.BUCEADOR),
-                new DroneAcuatico("AR-02", "Aqua-Ranger 100", 80,
-                        EstadoDrone.MANTENIMIENTO, "Canal Central", TipoDrone.SUPERFICIAL)
+                new DroneBuceador("AR-01", "Aqua-Ranger 100", 90,
+                        EstadoDrone.MANTENIMIENTO, "Embalse Norte"),
+                new DroneSuperficial("AR-02", "Aqua-Ranger 100", 80,
+                        EstadoDrone.MANTENIMIENTO, "Canal Central")
             );
             assertTrue(analizador.zonasUnicasDeFlotaActiva(todosEnMant).isEmpty());
         }
@@ -316,9 +313,9 @@ class AnalizadorFlotaTest {
         @Test
         @DisplayName("Todos no disponibles retorna 0")
         void todosNoDisponibles() {
-            var noDisponibles = List.of(
-                new DroneAcuatico("AR-01", "Aqua-Ranger 100", 90,
-                        EstadoDrone.MANTENIMIENTO, "Zona", TipoDrone.BUCEADOR)
+            List<DroneAcuatico> noDisponibles = List.of(
+                new DroneBuceador("AR-01", "Aqua-Ranger 100", 90,
+                        EstadoDrone.MANTENIMIENTO, "Zona")
             );
             assertEquals(0, analizador.bateriaTotalFlotaDisponible(noDisponibles));
         }
@@ -347,9 +344,9 @@ class AnalizadorFlotaTest {
         @Test
         @DisplayName("Sin drones críticos retorna lista vacía")
         void sinCriticos() {
-            var todosOk = List.of(
-                new DroneAcuatico("AR-01", "Aqua-Ranger 100", 90,
-                        EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR)
+            List<DroneAcuatico> todosOk = List.of(
+                new DroneBuceador("AR-01", "Aqua-Ranger 100", 90,
+                        EstadoDrone.DISPONIBLE, "Embalse Norte")
             );
             assertTrue(analizador.dronesConBateriaCritica(todosOk).isEmpty());
         }

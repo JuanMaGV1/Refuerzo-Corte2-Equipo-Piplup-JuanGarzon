@@ -1,12 +1,12 @@
 package com.eci.aquaport.aplicacion;
 
 import com.eci.aquaport.dominio.DroneAcuatico;
+import com.eci.aquaport.dominio.DroneBuceador;
 import com.eci.aquaport.dominio.EstadoDrone;
 import com.eci.aquaport.dominio.EstadoMision;
 import com.eci.aquaport.dominio.Mision;
 import com.eci.aquaport.dominio.Prioridad;
 import com.eci.aquaport.dominio.TipoCarga;
-import com.eci.aquaport.dominio.TipoDrone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,9 +23,9 @@ class RepositorioMisionesEnMemoriaTest {
     }
 
     private Mision mision(String id) {
-        DroneAcuatico drone = new DroneAcuatico(
+        DroneAcuatico drone = new DroneBuceador(
                 "AR-01", "Aqua-Ranger 100", 92,
-                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
+                EstadoDrone.DISPONIBLE, "Embalse Norte");
         return new Mision.Builder()
                 .id(id)
                 .drone(drone)

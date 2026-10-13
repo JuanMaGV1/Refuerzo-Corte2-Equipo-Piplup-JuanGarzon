@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class MisionTest {
 
     private DroneAcuatico droneValido() {
-        return new DroneAcuatico("AR-01", "Aqua-Ranger 100", 92,
-                EstadoDrone.DISPONIBLE, "Embalse Norte", TipoDrone.BUCEADOR);
+        return new DroneBuceador("AR-01", "Aqua-Ranger 100", 92,
+                EstadoDrone.DISPONIBLE, "Embalse Norte");
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -181,9 +181,9 @@ class MisionTest {
         @Test
         @DisplayName("Permite construir misión con drone NO disponible (ValidadorMision lo rechaza)")
         void droneNoDisponible_noBloqueaBuilder() {
-            DroneAcuatico droneNoDisponible = new DroneAcuatico(
+            DroneAcuatico droneNoDisponible = new DroneBuceador(
                     "AR-06", "Aqua-Ranger 100", 95,
-                    EstadoDrone.MANTENIMIENTO, "Embalse Norte", TipoDrone.BUCEADOR);
+                    EstadoDrone.MANTENIMIENTO, "Embalse Norte");
 
             Mision m = new Mision.Builder()
                     .id("M-002")
@@ -201,9 +201,9 @@ class MisionTest {
         @Test
         @DisplayName("Permite construir misión con drone de batería baja (ValidadorMision lo rechaza)")
         void droneBateriaBaja_noBloqueaBuilder() {
-            DroneAcuatico droneBateriaBaja = new DroneAcuatico(
+            DroneAcuatico droneBateriaBaja = new DroneBuceador(
                     "AR-03", "Aqua-Ranger 100", 18,
-                    EstadoDrone.DISPONIBLE, "Laguna Sur", TipoDrone.BUCEADOR);
+                    EstadoDrone.DISPONIBLE, "Laguna Sur");
 
             Mision m = new Mision.Builder()
                     .id("M-003")

@@ -6,6 +6,7 @@ public record Mision(
     String puntoPartida,
     String puntoLlegada,
     TipoCarga tipoCarga,
+    int cargaGramos,
     EstadoMision estadoMision,
     Prioridad prioridad
 ) {
@@ -29,6 +30,8 @@ public record Mision(
         private EstadoMision estadoMision;
         private Prioridad prioridad;
 
+        private int cargaGramos = 1; // por defecto 1g (no nulo)
+
         public Builder id(String id) { this.id = id; return this; }
         public Builder drone(DroneAcuatico drone) { this.drone = drone; return this; }
         public Builder puntoPartida(String puntoPartida) { this.puntoPartida = puntoPartida; return this; }
@@ -36,6 +39,13 @@ public record Mision(
         public Builder tipoCarga(TipoCarga tipoCarga) { this.tipoCarga = tipoCarga; return this; }
         public Builder estadoMision(EstadoMision estadoMision) { this.estadoMision = estadoMision; return this; }
         public Builder prioridad(Prioridad prioridad) { this.prioridad = prioridad; return this; }
+        public Builder cargaGramos(int gramos){
+            if (gramos <= 0){
+                throw new IllegalArgumentException("La carga debe ser > 0");
+            }
+            this.cargaGramos = gramos;
+            return this;
+        }
 
         public Mision build() {
             if (id == null || id.isBlank()) {
@@ -60,7 +70,7 @@ public record Mision(
                 throw new IllegalStateException("La prioridad no puede ser nula");
             }
             return new Mision(id, drone, puntoPartida, puntoLlegada,
-                    tipoCarga, estadoMision, prioridad);
+                    tipoCarga, cargaGramos, estadoMision, prioridad);
         }
     }
 }
